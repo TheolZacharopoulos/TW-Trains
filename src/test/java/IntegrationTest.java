@@ -28,8 +28,8 @@ public class IntegrationTest {
 
         final List<String> queryInstructions = FileUtils.readFileContentsLineByLine(queriesFilename);
 
-        RailwayQueryParser queryParser = new RailwayQueryParser(railwayMap);
-        QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor(queryParser);
+        RailwayQueryParser<Character> queryParser = new RailwayQueryParser<Character>(railwayMap);
+        QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor<Character>(queryParser);
 
         queryExecutor.loadQueries(queryInstructions);
 

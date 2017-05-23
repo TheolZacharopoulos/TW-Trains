@@ -34,8 +34,8 @@ public class Main {
 
             final List<String> queryInstructions = FileUtils.readFileContentsLineByLine(queriesFilename);
 
-            final RailwayQueryParser queryParser = new RailwayQueryParser(railwayMap);
-            final QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor(queryParser);
+            final RailwayQueryParser<Character> queryParser = new RailwayQueryParser<Character>(railwayMap);
+            final QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor<Character>(queryParser);
 
             queryExecutor.loadQueries(queryInstructions);
 

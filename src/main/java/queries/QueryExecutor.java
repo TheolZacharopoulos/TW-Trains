@@ -26,5 +26,5 @@ public interface QueryExecutor<R> {
      * @throws MissingQueryParametersException in case a parameter is missing
      * @throws WrongQueryParameterValueException in case a parameter is wrong
      */
-    void executeAll(Consumer<Optional<Integer>> queryResultConsumer) throws MissingQueryParametersException, WrongQueryParameterValueException;
+    void executeAll(Consumer<Optional<R>> queryResultConsumer) throws MissingQueryParametersException, WrongQueryParameterValueException;
 }

@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class RailwayQueryExecutor implements QueryExecutor<Integer> {
+public class RailwayQueryExecutor<T> implements QueryExecutor<Integer> {
     private final List<Query<Integer>> queries;
-    private final RailwayQueryParser queryParser;
+    private final RailwayQueryParser<T> queryParser;
 
-    public RailwayQueryExecutor(RailwayQueryParser queryParser) {
+    public RailwayQueryExecutor(RailwayQueryParser<T> queryParser) {
         this.queryParser = queryParser;
         this.queries = new ArrayList<>();
     }

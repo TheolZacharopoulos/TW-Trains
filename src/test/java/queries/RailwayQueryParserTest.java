@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 public class RailwayQueryParserTest {
 
-    private RailwayQueryParser queryParser;
+    private RailwayQueryParser<Character> queryParser;
 
     @Before
     public void setup() throws Exception {
@@ -30,7 +30,7 @@ public class RailwayQueryParserTest {
         graphParser.parse("AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7");
         RailwayMap<Character> map = new RailwayMap<Character>("Kiwiland", graph);
 
-        queryParser = new RailwayQueryParser(map);
+        queryParser = new RailwayQueryParser<Character>(map);
     }
 
     // =========================

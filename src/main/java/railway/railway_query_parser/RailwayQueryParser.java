@@ -15,7 +15,7 @@ import railway.railway_query.NumOfRoutesQuery;
 import railway.railway_query.RouteDistanceQuery;
 import railway.railway_query.ShortestRouteQuery;
 
-public class RailwayQueryParser extends QueriesParser<Integer> {
+public class RailwayQueryParser<T> extends QueriesParser<Integer> {
     private static final GraphAlgorithmProvider ALGORITHM_PROVIDER = new GraphAlgorithmProvider();
 
     private static final ShortestPathAlgorithm SHORTEST_PATH_ALGORITHM =
@@ -53,9 +53,9 @@ public class RailwayQueryParser extends QueriesParser<Integer> {
     private final String SHORTEST_ROUTE_FROM = "from";
     private final String SHORTEST_ROUTE_TO = "to";
 
-    private final RailwayMap<Character> map;
+    private final RailwayMap<T> map;
 
-    public RailwayQueryParser(RailwayMap<Character> map) {
+    public RailwayQueryParser(RailwayMap<T> map) {
         this.map = map;
     }
 
@@ -68,97 +68,92 @@ public class RailwayQueryParser extends QueriesParser<Integer> {
         } else if (input.startsWith(SHORTEST_ROUTE_STARTS_WITH)) {
             return parseShortestRouteQuery(input);
         }
-
         throw new QueryParseException("Not correct input for query.");
     }
 
     private Query<Integer> parseRouteDistanceQuery(String input) throws QueryParseException {
-        if (input.startsWith(ROUTE_DISTANCE_STARTS_WITH)) {
-            final int routeKeywordIndex = input.indexOf(ROUTE_DISTANCE_ROUTE);
-            if (routeKeywordIndex != -1) {
-                final String route;
-                try {
-                    route = input.substring(routeKeywordIndex + ROUTE_DISTANCE_ROUTE.length() + 1, input.indexOf("."));
-                } catch (IndexOutOfBoundsException e) {
-                    throw new QueryParseException("Not correct input for query.");
-                }
+        final int routeKeywordIndex = input.indexOf(ROUTE_DISTANCE_ROUTE);
 
-                if (route.isEmpty()) {
-                    throw new QueryParseException("Not correct input for query.");
-                }
-
-                final String[] routeVertices = route.split("-");
-                if (routeVertices.length < 2) {
-                    throw new QueryParseException("Not correct input for query.");
-                }
-
-                final RouteDistanceQuery<Character> query = new RouteDistanceQuery<Character>(map, ROUTE_DISTANCE_ALGORITHM);
-                for (String town : routeVertices) {
-                    query.addTownStop(town.charAt(0));
-                }
-
-                return query;
+        if (routeKeywordIndex != -1) {
+            final String route;
+            try {
+                route = input.substring(routeKeywordIndex + ROUTE_DISTANCE_ROUTE.length() + 1, input.indexOf("."));
+            } catch (IndexOutOfBoundsException e) {
+                throw new QueryParseException("Not correct input for query.");
             }
+
+            if (route.isEmpty()) {
+                throw new QueryParseException("Not correct input for query.");
+            }
+
+            final String[] routeVertices = route.split("-");
+            if (routeVertices.length < 2) {
+                throw new QueryParseException("Not correct input for query.");
+            }
+
+            final RouteDistanceQuery<T> query = new RouteDistanceQuery<T>(map, ROUTE_DISTANCE_ALGORITHM);
+            for (String town : routeVertices) {
+                query.addTownStop((T) new Character(town.charAt(0)));
+            }
+
+            return query;
         }
         throw new QueryParseException("Not correct input for query.");
     }
 
     private Query<Integer> parseNumberOfRoutesQuery(String input) throws QueryParseException {
-        if (input.startsWith(NUMBER_OF_ROUTES_STARTS_WITH_1) || input.startsWith(NUMBER_OF_ROUTES_STARTS_WITH_2)) {
-            final FromToSettings fromToSettings = parseFromToForNumberOfRoutesQuery(input);
+        final FromToSettings fromToSettings = parseFromToForNumberOfRoutesQuery(input);
 
-            // it is max stops query
-            if (input.contains(NUMBER_OF_ROUTES_MAX_STOPS_START) && input.contains(NUMBER_OF_ROUTES_MAX_STOPS_END)) {
-                final int maxIndex = input.indexOf(NUMBER_OF_ROUTES_MAX_STOPS_START, fromToSettings.toIndex);
-                try {
-                    final String stopsStr = input.substring(
-                            maxIndex + NUMBER_OF_ROUTES_MAX_STOPS_START.length() + 1,
-                            input.indexOf(" ", maxIndex + NUMBER_OF_ROUTES_MAX_STOPS_START.length() + 1));
+        // it is max stops query
+        if (input.contains(NUMBER_OF_ROUTES_MAX_STOPS_START) && input.contains(NUMBER_OF_ROUTES_MAX_STOPS_END)) {
+            final int maxIndex = input.indexOf(NUMBER_OF_ROUTES_MAX_STOPS_START, fromToSettings.toIndex);
+            try {
+                final String stopsStr = input.substring(
+                        maxIndex + NUMBER_OF_ROUTES_MAX_STOPS_START.length() + 1,
+                        input.indexOf(" ", maxIndex + NUMBER_OF_ROUTES_MAX_STOPS_START.length() + 1));
 
-                    return new NumOfRoutesQuery<Character>(map, fromToSettings.from, fromToSettings.to, COUNT_PATHS_ALGORITHM)
-                            .maxStops(Integer.parseInt(stopsStr));
+                return new NumOfRoutesQuery<T>(map, fromToSettings.from, fromToSettings.to, COUNT_PATHS_ALGORITHM)
+                        .maxStops(Integer.parseInt(stopsStr));
 
-                } catch (Exception e) {
-                    throw new QueryParseException("Not correct input for query.");
-                }
-
-            // it is exact stops query
-            } else if (input.contains(NUMBER_OF_ROUTES_EXACT_STOPS_START) && input.contains(NUMBER_OF_ROUTES_EXACT_STOPS_END)) {
-
-                final int exactIndex = input.indexOf(NUMBER_OF_ROUTES_EXACT_STOPS_START, fromToSettings.toIndex);
-                try {
-                    final String stopsStr = input.substring(
-                            exactIndex + NUMBER_OF_ROUTES_EXACT_STOPS_START.length() + 1,
-                            input.indexOf(" ", exactIndex + NUMBER_OF_ROUTES_EXACT_STOPS_START.length() + 1));
-
-                    return new NumOfRoutesQuery<Character>(map, fromToSettings.from, fromToSettings.to, COUNT_PATHS_ALGORITHM)
-                            .exactStops(Integer.parseInt(stopsStr));
-
-                } catch (Exception e) {
-                    throw new QueryParseException("Not correct input for query.");
-                }
-
-            // it is max distance query
-            } else if (input.contains(NUMBER_OF_ROUTES_MAX_DISTANCE)) {
-                final int lessIndex = input.indexOf(NUMBER_OF_ROUTES_MAX_DISTANCE, fromToSettings.toIndex);
-                try {
-                    final String distanceStr = input.substring(
-                            lessIndex + NUMBER_OF_ROUTES_MAX_DISTANCE.length() + 1,
-                            input.indexOf(".", lessIndex + NUMBER_OF_ROUTES_MAX_DISTANCE.length() + 1));
-
-                    return new NumOfRoutesQuery<>(map, fromToSettings.from, fromToSettings.to, COUNT_PATHS_ALGORITHM)
-                            .maxDistance(Integer.parseInt(distanceStr));
-
-                } catch (Exception e) {
-                    throw new QueryParseException("Not correct input for query.");
-                }
-
-            // no query matches
-            } else {
+            } catch (Exception e) {
                 throw new QueryParseException("Not correct input for query.");
             }
+
+        // it is exact stops query
+        } else if (input.contains(NUMBER_OF_ROUTES_EXACT_STOPS_START) && input.contains(NUMBER_OF_ROUTES_EXACT_STOPS_END)) {
+
+            final int exactIndex = input.indexOf(NUMBER_OF_ROUTES_EXACT_STOPS_START, fromToSettings.toIndex);
+            try {
+                final String stopsStr = input.substring(
+                        exactIndex + NUMBER_OF_ROUTES_EXACT_STOPS_START.length() + 1,
+                        input.indexOf(" ", exactIndex + NUMBER_OF_ROUTES_EXACT_STOPS_START.length() + 1));
+
+                return new NumOfRoutesQuery<T>(map, fromToSettings.from, fromToSettings.to, COUNT_PATHS_ALGORITHM)
+                        .exactStops(Integer.parseInt(stopsStr));
+
+            } catch (Exception e) {
+                throw new QueryParseException("Not correct input for query.");
+            }
+
+        // it is max distance query
+        } else if (input.contains(NUMBER_OF_ROUTES_MAX_DISTANCE)) {
+            final int lessIndex = input.indexOf(NUMBER_OF_ROUTES_MAX_DISTANCE, fromToSettings.toIndex);
+            try {
+                final String distanceStr = input.substring(
+                        lessIndex + NUMBER_OF_ROUTES_MAX_DISTANCE.length() + 1,
+                        input.indexOf(".", lessIndex + NUMBER_OF_ROUTES_MAX_DISTANCE.length() + 1));
+
+                return new NumOfRoutesQuery<T>(map, fromToSettings.from, fromToSettings.to, COUNT_PATHS_ALGORITHM)
+                        .maxDistance(Integer.parseInt(distanceStr));
+
+            } catch (Exception e) {
+                throw new QueryParseException("Not correct input for query.");
+            }
+
+        // no query matches
+        } else {
+            throw new QueryParseException("Not correct input for query.");
         }
-        throw new QueryParseException("Not correct input for query.");
     }
 
     private class FromToSettings {
@@ -166,8 +161,8 @@ public class RailwayQueryParser extends QueriesParser<Integer> {
         int toIndex;
         String fromKeyWord;
         String toKeyWord;
-        Character from;
-        Character to;
+        T from;
+        T to;
     }
 
     private FromToSettings parseFromToForNumberOfRoutesQuery(String input) throws QueryParseException {
@@ -189,11 +184,11 @@ public class RailwayQueryParser extends QueriesParser<Integer> {
             throw new QueryParseException("Not correct input for query.");
         }
 
-        final Character from;
-        final Character to;
+        final T from;
+        final T to;
         try {
-            from = getVertexChar(input, fromToSettings.fromIndex, fromToSettings.fromKeyWord);
-            to = getVertexChar(input, fromToSettings.toIndex, fromToSettings.toKeyWord);
+            from = getVertex(input, fromToSettings.fromIndex, fromToSettings.fromKeyWord);
+            to = getVertex(input, fromToSettings.toIndex, fromToSettings.toKeyWord);
 
             fromToSettings.from = from;
             fromToSettings.to = to;
@@ -204,27 +199,25 @@ public class RailwayQueryParser extends QueriesParser<Integer> {
         return fromToSettings;
     }
 
-    private Character getVertexChar(String input, int index, String keyword) {
-        return input.substring(index + keyword.length() + 1, index + keyword.length() + 2).charAt(0);
+    private T getVertex(String input, int index, String keyword) {
+        return (T) new Character(input.substring(index + keyword.length() + 1, index + keyword.length() + 2).charAt(0));
     }
 
     private Query<Integer> parseShortestRouteQuery(String input) throws QueryParseException {
-        if (input.startsWith(SHORTEST_ROUTE_STARTS_WITH)) {
             final int fromIndex = input.indexOf(SHORTEST_ROUTE_FROM);
             final int toIndex = input.indexOf(SHORTEST_ROUTE_TO, fromIndex);
 
             if (fromIndex != -1 && toIndex != -1) {
-                final Character from;
-                final Character to;
+                final T from;
+                final T to;
                 try {
-                    from = getVertexChar(input, fromIndex, SHORTEST_ROUTE_FROM);
-                    to = getVertexChar(input, toIndex, SHORTEST_ROUTE_TO);
+                    from = getVertex(input, fromIndex, SHORTEST_ROUTE_FROM);
+                    to = getVertex(input, toIndex, SHORTEST_ROUTE_TO);
                 } catch (IndexOutOfBoundsException e) {
                     throw new QueryParseException("Not correct input for query.");
                 }
-                return new ShortestRouteQuery<Character>(map, from, to, SHORTEST_PATH_ALGORITHM);
+                return new ShortestRouteQuery<T>(map, from, to, SHORTEST_PATH_ALGORITHM);
             }
-        }
         throw new QueryParseException("Not correct input for query.");
     }
 }

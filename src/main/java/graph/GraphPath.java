@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Represents a path on a graph
- * @param <T> the type og the Graph
+ * @param <T> the type of the Graph
  */
 public class GraphPath<T> {
     private List<Vertex<T>> vertices;

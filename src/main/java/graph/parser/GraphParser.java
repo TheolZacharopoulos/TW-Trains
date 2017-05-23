@@ -6,13 +6,13 @@ import parser.Parser;
 /**
  * An abstract Graph parsers
  * @param <I> the input type
- * @param <O> the Graph's elements type
+ * @param <R> the Graph's elements type
  */
-abstract public class GraphParser<I, O> implements Parser<I, Graph<O>> {
+abstract public class GraphParser<I, R> implements Parser<I, Graph<R>> {
 
-    protected Graph<O> graph;
+    protected Graph<R> graph;
 
-    public GraphParser(Graph<O> graph) {
+    public GraphParser(Graph<R> graph) {
         this.graph = graph;
     }
 
@@ -23,5 +23,5 @@ abstract public class GraphParser<I, O> implements Parser<I, Graph<O>> {
      * @throws GraphParseException in case of input parsing error
      */
     @Override
-    abstract public Graph<O> parse(I input) throws GraphParseException;
+    abstract public Graph<R> parse(I input) throws GraphParseException;
 }
