@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * A dijkstra's algorithm implementation
+ */
 public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
     public static final String ALGORITHM_NAME = "DIJKSTRA_SHORTEST_PATH";
 
@@ -17,13 +20,16 @@ public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
         return ALGORITHM_NAME;
     }
 
+    /**
+     * Helper class used for saving temporary data while traversing
+     */
     private class VertexInfo {
         int distance;
-        boolean isDone;
+        boolean visited;
 
-        VertexInfo(int dist, boolean isDone) {
+        VertexInfo(int dist, boolean visited) {
             this.distance = dist;
-            this.isDone = isDone;
+            this.visited = visited;
         }
     }
 
@@ -32,7 +38,7 @@ public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
         int minDistance = 0;
 
         for (Vertex<T> vertex : info.keySet()) {
-            if (!info.get(vertex).isDone) {
+            if (!info.get(vertex).visited) {
                 if (closest == null || info.get(vertex).distance < minDistance) {
                     closest = vertex;
                     minDistance = info.get(vertex).distance;
@@ -63,7 +69,7 @@ public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
                     }
                 }
 
-                info.get(cur).isDone = true;
+                info.get(cur).visited = true;
 
                 // this is in case start == end,
                 // where we do not want to get 0 but a new path starting from the next one.

@@ -1,5 +1,8 @@
 package parser;
 
+/**
+ * Represents an error while parsing
+ */
 public class ParseException extends Exception {
 
     public ParseException() {

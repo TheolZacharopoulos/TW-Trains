@@ -36,32 +36,26 @@ public class NumOfRoutesQueryTest {
 
     @Test(expected = MissingQueryParametersException.class)
     public void testMissingFrom() throws Exception {
-            new NumOfRoutesQuery<Character>(map, algorithm)
-                    .to('C')
+            new NumOfRoutesQuery<Character>(map, null, 'C', algorithm)
                 .execute();
     }
 
     @Test(expected = MissingQueryParametersException.class)
     public void testMissingTo() throws Exception {
-            new NumOfRoutesQuery<Character>(map, algorithm)
-                    .from('A')
+            new NumOfRoutesQuery<Character>(map, 'A', null, algorithm)
                 .execute();
     }
 
     @Test(expected = WrongQueryParameterValueException.class)
     public void testExactStops() throws Exception {
-            new NumOfRoutesQuery<Character>(map, algorithm)
-                    .from('C')
-                    .to('C')
+            new NumOfRoutesQuery<Character>(map, 'C', 'C', algorithm)
                     .exactStops(-1)
                 .execute();
     }
 
     @Test(expected = WrongQueryParameterValueException.class)
     public void testMaxStops() throws Exception {
-            new NumOfRoutesQuery<Character>(map, algorithm)
-                    .from('C')
-                    .to('C')
+            new NumOfRoutesQuery<Character>(map, 'C', 'C', algorithm)
                     .maxStops(-1)
                 .execute();
     }
@@ -69,9 +63,7 @@ public class NumOfRoutesQueryTest {
     @Test
     public void NumOfRoutesQuery_1() throws Exception {
         final Optional<Integer> res =
-                new NumOfRoutesQuery<Character>(map, algorithm)
-                        .from('C')
-                        .to('C')
+                new NumOfRoutesQuery<Character>(map, 'C', 'C', algorithm)
                         .maxStops(3)
                     .execute();
 
@@ -82,11 +74,9 @@ public class NumOfRoutesQueryTest {
     @Test
     public void NumOfRoutesQuery_2() throws Exception {
         final Optional<Integer> res =
-                new NumOfRoutesQuery<Character>(map, algorithm)
-                        .from('A')
-                        .to('C')
+                new NumOfRoutesQuery<Character>(map, 'A', 'C', algorithm)
                         .exactStops(4)
-                        .execute();
+                    .execute();
 
         assertTrue(res.isPresent());
         assertEquals(3, (int) res.get());
@@ -95,11 +85,9 @@ public class NumOfRoutesQueryTest {
     @Test
     public void NumOfRoutesQuery_3() throws Exception {
         final Optional<Integer> res =
-                new NumOfRoutesQuery<Character>(map, algorithm)
-                        .from('C')
-                        .to('C')
+                new NumOfRoutesQuery<Character>(map, 'C', 'C', algorithm)
                         .maxDistance(30)
-                        .execute();
+                    .execute();
 
         assertTrue(res.isPresent());
         assertEquals(7, (int) res.get());

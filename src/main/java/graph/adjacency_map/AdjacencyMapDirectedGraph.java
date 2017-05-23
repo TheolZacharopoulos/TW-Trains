@@ -6,6 +6,9 @@ import graph.errors.GraphException;
 
 import java.util.*;
 
+/**
+ * An implementation of a directed graph using an AdjacencyMap
+ */
 public class AdjacencyMapDirectedGraph<T> extends AdjacencyMapGraph<T> {
     protected Map<Vertex<T>, Map<Vertex<T>, Edge<T>>> incoming = new HashMap<>();
 

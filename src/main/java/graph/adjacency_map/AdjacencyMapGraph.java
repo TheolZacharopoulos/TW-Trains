@@ -8,6 +8,9 @@ import graph.errors.GraphException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * An implementation of an undirected graph using an AdjacencyMap
+ */
 public class AdjacencyMapGraph<T> implements Graph<T> {
     protected Map<Vertex<T>, Map<Vertex<T>, Edge<T>>> outgoing = new HashMap<>();
 

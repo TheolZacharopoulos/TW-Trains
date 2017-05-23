@@ -7,12 +7,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents a Character type Graph parser.
+ */
 public class CharGraphParser extends GraphParser<String, Character> {
 
     public CharGraphParser(Graph<Character> graph) {
         super(graph);
     }
 
+    /**
+     * Parses a graph description and constructs a graph object out of it.
+     * @param input the description of a graph
+     * @return a new Graph object
+     * @throws GraphParseException in case of input parsing error
+     */
     @Override
     public Graph<Character> parse(String input) throws GraphParseException {
         final List<String> edgeDefinitions = new ArrayList<>();
@@ -39,6 +48,11 @@ public class CharGraphParser extends GraphParser<String, Character> {
         return this.graph;
     }
 
+    /**
+     * Checks the definition of an edge
+     * @param edgeDef the edge definition from input
+     * @return true if it is correct, false otherwise
+     */
     private boolean isValidEdgeDefinition(String edgeDef) {
         return edgeDef.length() == 3 &&
                 Character.isAlphabetic(edgeDef.charAt(0)) &&

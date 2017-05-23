@@ -3,6 +3,10 @@ package graph;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Represents a path on a graph
+ * @param <T> the type og the Graph
+ */
 public class GraphPath<T> {
     private List<Vertex<T>> vertices;
     private int totalDistance;
@@ -13,6 +17,14 @@ public class GraphPath<T> {
 
     public GraphPath(List<Vertex<T>> vertices, int totalDistance) {
         this.vertices = vertices;
+        this.totalDistance = totalDistance;
+    }
+
+    public List<Vertex<T>> getVertices() {
+        return vertices;
+    }
+
+    public void setTotalDistance(int totalDistance) {
         this.totalDistance = totalDistance;
     }
 

@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * A Depth First Search implementation
+ */
 public class DFSCountPathsAlgorithm implements CountPathsAlgorithm {
     public static final String ALGORITHM_NAME = "DFS_COUNT_PATHS";
 

@@ -35,15 +35,13 @@ public class ShortestRouteQueryTest {
     
     @Test(expected = MissingQueryParametersException.class)
     public void testMissingFrom() throws Exception {
-        new ShortestRouteQuery<Character>(map, algorithm)
-                .to('C')
+        new ShortestRouteQuery<Character>(map, null, 'C', algorithm)
             .execute();
     }
 
     @Test(expected = MissingQueryParametersException.class)
     public void testMissingTo() throws Exception {
-        new ShortestRouteQuery<Character>(map, algorithm)
-                .from('A')
+        new ShortestRouteQuery<Character>(map, 'A', null, algorithm)
             .execute();
     }
 
@@ -51,9 +49,7 @@ public class ShortestRouteQueryTest {
     public void testShortestRouteQuery_1() throws Exception {
         // The length of the shortest route (in terms of distance to travel) from A to C.
         final Optional<Integer> res =
-                new ShortestRouteQuery<Character>(map, algorithm)
-                        .from('A')
-                        .to('C')
+                new ShortestRouteQuery<Character>(map, 'A', 'C', algorithm)
                     .execute();
 
         assertTrue(res.isPresent());
@@ -64,9 +60,7 @@ public class ShortestRouteQueryTest {
     public void testShortestRouteQuery_2() throws Exception {
         // The length of the shortest route (in terms of distance to travel) from B to B.
         final Optional<Integer> res =
-                new ShortestRouteQuery<Character>(map, algorithm)
-                        .from('B')
-                        .to('B')
+                new ShortestRouteQuery<Character>(map, 'B', 'B', algorithm)
                     .execute();
 
         assertTrue(res.isPresent());

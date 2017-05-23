@@ -11,24 +11,16 @@ public abstract class FromToRailwayQuery<T, R> extends RailwayQuery <T, R> {
     protected Vertex<T> from;
     protected Vertex<T> to;
 
-    public FromToRailwayQuery(RailwayMap<T> map) {
-        super(map);
-    }
-
     public FromToRailwayQuery(RailwayMap<T> map, T from, T to) {
         super(map);
-        this.from = new Vertex<>(from);
-        this.to = new Vertex<>(to);
-    }
 
-    public FromToRailwayQuery<T, R> from(T from) {
-        this.from = new Vertex<>(from);
-        return this;
-    }
+        if (from != null) {
+            this.from = new Vertex<>(from);
+        }
 
-    public FromToRailwayQuery<T, R> to(T to) {
-        this.to = new Vertex<>(to);
-        return this;
+        if (to != null) {
+            this.to = new Vertex<>(to);
+        }
     }
 
     @Override

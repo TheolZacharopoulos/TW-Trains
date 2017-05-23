@@ -1,6 +1,9 @@
 package railway.railway_query;
 
+import graph.GraphPath;
+import graph.Vertex;
 import graph.algorithms.route_distance.RouteDistanceAlgorithm;
+import graph.errors.GraphException;
 import queries.errors.MissingQueryParametersException;
 import queries.errors.WrongQueryParameterValueException;
 import railway.RailwayMap;
@@ -9,7 +12,7 @@ import java.util.LinkedList;
 import java.util.Optional;
 
 public class RouteDistanceQuery<T> extends RailwayQuery<T, Integer> {
-    private final LinkedList<T> route = new LinkedList<>();
+    private final LinkedList<Vertex<T>> route = new LinkedList<>();
     private final RouteDistanceAlgorithm algorithm;
 
     public RouteDistanceQuery(RailwayMap<T> map, RouteDistanceAlgorithm algorithm) {
@@ -18,8 +21,9 @@ public class RouteDistanceQuery<T> extends RailwayQuery<T, Integer> {
     }
 
     public RouteDistanceQuery<T> addTownStop(T town) {
-        if (!route.contains(town)) {
-            route.add(town);
+        final Vertex<T> vTown = new Vertex<>(town);
+        if (!route.contains(vTown)) {
+            route.add(vTown);
         }
         return this;
     }
@@ -27,7 +31,14 @@ public class RouteDistanceQuery<T> extends RailwayQuery<T, Integer> {
     @Override
     public Optional<Integer> execute() throws MissingQueryParametersException, WrongQueryParameterValueException {
         checkTownsNumber();
-        return this.algorithm.findRouteDistance(this.map.getGraph(), route);
+        final GraphPath<T> path = new GraphPath<T>(route, 0);
+
+        try {
+            this.algorithm.findRouteDistance(this.map.getGraph(), path);
+        } catch (GraphException e) {
+            return Optional.empty();
+        }
+        return Optional.of(path.getTotalDistance());
     }
 
     private void checkTownsNumber() throws MissingQueryParametersException {

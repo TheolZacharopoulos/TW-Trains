@@ -7,6 +7,9 @@ import graph.algorithms.route_distance.RouteDistanceAlgorithm;
 import graph.algorithms.shortest_path.DijkstraShortestPathAlgorithm;
 import graph.algorithms.shortest_path.ShortestPathAlgorithm;
 
+/**
+ * Responsible for providing implementation of graph algorithms (a Strategy pattern)
+ */
 public class GraphAlgorithmProvider {
     private final static ShortestPathAlgorithm SHORTEST_PATH_ALGORITHM_DIJKSTRA = new DijkstraShortestPathAlgorithm();
     private final static CountPathsAlgorithm COUNT_PATHS_ALGORITHM_DFS = new DFSCountPathsAlgorithm();

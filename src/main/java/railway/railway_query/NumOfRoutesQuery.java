@@ -1,7 +1,6 @@
 package railway.railway_query;
 
 import graph.GraphPath;
-import graph.Vertex;
 import graph.algorithms.count_paths.CountPathsAlgorithm;
 import graph.errors.GraphException;
 import queries.errors.MissingQueryParametersException;
@@ -21,24 +20,9 @@ public class NumOfRoutesQuery<T> extends FromToRailwayQuery<T, Integer> {
 
     private final CountPathsAlgorithm algorithm;
 
-    public NumOfRoutesQuery(RailwayMap<T> map, CountPathsAlgorithm algorithm) {
-        super(map);
-        this.algorithm = algorithm;
-    }
-
     public NumOfRoutesQuery(RailwayMap<T> map, T from, T to, CountPathsAlgorithm algorithm) {
         super(map, from, to);
         this.algorithm = algorithm;
-    }
-
-    public NumOfRoutesQuery<T> from(T from) {
-        this.from = new Vertex<>(from);
-        return this;
-    }
-
-    public NumOfRoutesQuery<T> to(T to) {
-        this.to = new Vertex<>(to);
-        return this;
     }
 
     public NumOfRoutesQuery<T> maxStops(int stops) {
