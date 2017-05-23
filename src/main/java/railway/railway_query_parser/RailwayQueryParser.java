@@ -49,9 +49,9 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
     private static final String NUMBER_OF_ROUTES_MAX_DISTANCE = "with a distance of less than";
 
     // Shortest Route
-    private final String SHORTEST_ROUTE_STARTS_WITH = "The length of the shortest route";
-    private final String SHORTEST_ROUTE_FROM = "from";
-    private final String SHORTEST_ROUTE_TO = "to";
+    private static final String SHORTEST_ROUTE_STARTS_WITH = "The length of the shortest route";
+    private static final String SHORTEST_ROUTE_FROM = "from";
+    private static final String SHORTEST_ROUTE_TO = "to";
 
     private final RailwayMap<T> map;
 
@@ -142,9 +142,9 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
     }
 
     /**
-     * ==============================================================
+     * ==========================================================
      *                      Helper methods
-     * ==============================================================
+     * ==========================================================
      */
     private class FromToSettings {
         int fromIndex;
@@ -234,6 +234,7 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
         return fromToSettings;
     }
 
+    // Return the correct type of Vertex
     protected abstract T getVertexFromStringAfterIndexAndKeyword(String input, int index, String keyword);
     protected abstract T getVertexElementFromRouteVertexData(String routeVertexData);
 }
