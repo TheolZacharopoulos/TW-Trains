@@ -140,12 +140,12 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
      * ==========================================================
      */
     private class FromToSettings {
-        int fromIndex;
-        int toIndex;
-        String fromKeyWord;
-        String toKeyWord;
-        T from;
-        T to;
+        private int fromIndex;
+        private int toIndex;
+        private String fromKeyWord;
+        private String toKeyWord;
+        private T from;
+        private T to;
     }
 
     private String parseArgument(

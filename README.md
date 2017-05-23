@@ -26,16 +26,20 @@ then directly to city C (a distance of 4).
 
 
 ## Run Information
-
-### Build project
 The project uses maven for build tool.
 
+### Test project
+Use maven to run the tests of the project:
+```shell
+$ mvn test
+```
 
+### Build project
 In order to build it you can just got to the tw-trains directory and:
 ```shell
 $ mvn clean install
 ```
- 
+
 ### Run project
 During the packaging phase maven create a jar file which can be used as an executable.
 
