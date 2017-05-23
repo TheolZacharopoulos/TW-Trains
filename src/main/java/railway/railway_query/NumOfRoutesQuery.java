@@ -2,7 +2,7 @@ package railway.railway_query;
 
 import graph.GraphPath;
 import graph.Vertex;
-import graph.algorithms.CountPathsAlgorithm;
+import graph.algorithms.count_paths.CountPathsAlgorithm;
 import graph.errors.GraphException;
 import queries.errors.MissingQueryParametersException;
 import queries.errors.WrongQueryParameterValueException;
@@ -19,12 +19,16 @@ public class NumOfRoutesQuery<T> extends FromToRailwayQuery<T, Integer> {
     private Predicate<GraphPath<T>> endPredicate = path -> true;
     private Predicate<GraphPath<T>> checkPathPredicate = path -> true;
 
-    public NumOfRoutesQuery(RailwayMap<T> map) {
+    private final CountPathsAlgorithm algorithm;
+
+    public NumOfRoutesQuery(RailwayMap<T> map, CountPathsAlgorithm algorithm) {
         super(map);
+        this.algorithm = algorithm;
     }
 
-    public NumOfRoutesQuery(RailwayMap<T> map, T from, T to) {
+    public NumOfRoutesQuery(RailwayMap<T> map, T from, T to, CountPathsAlgorithm algorithm) {
         super(map, from, to);
+        this.algorithm = algorithm;
     }
 
     public NumOfRoutesQuery<T> from(T from) {
@@ -65,7 +69,7 @@ public class NumOfRoutesQuery<T> extends FromToRailwayQuery<T, Integer> {
         checkStops();
 
         try {
-            final List<GraphPath<T>> paths = CountPathsAlgorithm.getNumberOfPaths(
+            final List<GraphPath<T>> paths = this.algorithm.getNumberOfPaths(
                     map.getGraph(),
                     from,
                     this.endPredicate,

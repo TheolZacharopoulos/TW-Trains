@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class RailwayQueryExecutor implements QueryExecutor<Integer> {
     private final List<Query<Integer>> queries;
@@ -28,14 +27,10 @@ public class RailwayQueryExecutor implements QueryExecutor<Integer> {
         }
     }
 
-    public List<Optional<Integer>> executeAll() throws MissingQueryParametersException, WrongQueryParameterValueException {
-        return queries.stream()
-                .map(this::safeQueryExecution)
-                .collect(Collectors.toList());
-    }
-
     @Override
-    public void executeAll(Consumer<Optional<Integer>> queryResultConsumer) throws MissingQueryParametersException, WrongQueryParameterValueException {
+    public void executeAll(Consumer<Optional<Integer>> queryResultConsumer)
+            throws MissingQueryParametersException, WrongQueryParameterValueException
+    {
         queries.stream()
             .map(this::safeQueryExecution)
             .forEach(queryResultConsumer);

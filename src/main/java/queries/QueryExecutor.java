@@ -11,8 +11,6 @@ import java.util.function.Consumer;
 public interface QueryExecutor<R> {
     void loadQueries(List<String> queryInstructions) throws QueryParseException;
 
-    List<Optional<R>> executeAll() throws MissingQueryParametersException, WrongQueryParameterValueException;
-
     void executeAll(Consumer<Optional<Integer>> queryResultConsumer) throws MissingQueryParametersException, WrongQueryParameterValueException;
 
     default Optional<R> execute(Query<R> query) throws MissingQueryParametersException, WrongQueryParameterValueException {

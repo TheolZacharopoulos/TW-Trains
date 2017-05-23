@@ -1,4 +1,4 @@
-package graph.algorithms;
+package graph.algorithms.route_distance;
 
 import graph.Edge;
 import graph.Graph;
@@ -7,9 +7,15 @@ import graph.errors.GraphException;
 import java.util.LinkedList;
 import java.util.Optional;
 
-public class RouteDistanceAlgorithm {
+public class BFSRouteDistanceAlgorithm implements RouteDistanceAlgorithm {
+    public static final String ALGORITHM_NAME = "BFS_ROUTE_DISTANCE";
 
-    public static <T> Optional<Integer> findRouteDistance(Graph<T> graph, LinkedList<T> routeVertices) {
+    @Override
+    public String getAlgorithmName() {
+        return ALGORITHM_NAME;
+    }
+
+    public <T> Optional<Integer> findRouteDistance(Graph<T> graph, LinkedList<T> routeVertices) {
         Integer totalDistance = 0;
 
         // keep the previous vertex and start for the second

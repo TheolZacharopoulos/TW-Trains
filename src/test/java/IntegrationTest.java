@@ -9,6 +9,7 @@ import railway.RailwayQueryExecutor;
 import railway.railway_query_parser.RailwayQueryParser;
 import utils.FileUtils;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,8 @@ public class IntegrationTest {
 
         queryExecutor.loadQueries(queryInstructions);
 
-        final List<Optional<Integer>> results = queryExecutor.executeAll();
+        final List<Optional<Integer>> results = new LinkedList<>();
+        queryExecutor.executeAll(results::add);
 
         assertEquals(10, results.size());
 

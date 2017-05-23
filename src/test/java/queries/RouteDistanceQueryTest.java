@@ -1,23 +1,24 @@
 package queries;
 
-import graph.adjacency_map.AdjacencyMapDirectedGraph;
 import graph.Graph;
+import graph.adjacency_map.AdjacencyMapDirectedGraph;
+import graph.algorithms.route_distance.BFSRouteDistanceAlgorithm;
+import graph.algorithms.GraphAlgorithmProvider;
+import graph.algorithms.route_distance.RouteDistanceAlgorithm;
 import graph.parser.CharGraphParser;
 import org.junit.Before;
 import org.junit.Test;
 import queries.errors.MissingQueryParametersException;
-import railway.railway_query.RouteDistanceQuery;
 import railway.RailwayMap;
+import railway.railway_query.RouteDistanceQuery;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RouteDistanceQueryTest {
-
     private RailwayMap<Character> map;
+    private RouteDistanceAlgorithm algorithm;
 
     @Before
     public void setup() throws Exception {
@@ -26,17 +27,20 @@ public class RouteDistanceQueryTest {
 
         graphParser.parse("AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7");
         map = new RailwayMap<Character>("Kiwiland", graph);
+
+        GraphAlgorithmProvider algorithmProvider = new GraphAlgorithmProvider();
+        algorithm = algorithmProvider.getRouteDistanceAlgorithm(BFSRouteDistanceAlgorithm.ALGORITHM_NAME);
     }
 
     @Test(expected = MissingQueryParametersException.class)
     public void testMissingTowns_none() throws Exception {
-        new RouteDistanceQuery<Character>(map)
+        new RouteDistanceQuery<Character>(map, algorithm)
             .execute();
     }
 
     @Test(expected = MissingQueryParametersException.class)
     public void testMissingTowns_only_one() throws Exception {
-        new RouteDistanceQuery<Character>(map)
+        new RouteDistanceQuery<Character>(map, algorithm)
                 .addTownStop('A')
             .execute();
     }
@@ -45,7 +49,7 @@ public class RouteDistanceQueryTest {
     public void testDistanceQuery_1() throws Exception {
         // The distance of the route A-B-C.
         final Optional<Integer> res =
-                new RouteDistanceQuery<Character>(map)
+                new RouteDistanceQuery<Character>(map, algorithm)
                     .addTownStop('A')
                     .addTownStop('B')
                     .addTownStop('C')
@@ -59,7 +63,7 @@ public class RouteDistanceQueryTest {
     public void testDistanceQuery_2() throws Exception {
         // The distance of the route A-D.
         final Optional<Integer> res =
-                new RouteDistanceQuery<Character>(map)
+                new RouteDistanceQuery<Character>(map, algorithm)
                         .addTownStop('A')
                         .addTownStop('D')
                     .execute();
@@ -72,7 +76,7 @@ public class RouteDistanceQueryTest {
     public void testDistanceQuery_3() throws Exception {
         // The distance of the route A-D-C.
         final Optional<Integer> res =
-                new RouteDistanceQuery<Character>(map)
+                new RouteDistanceQuery<Character>(map, algorithm)
                         .addTownStop('A')
                         .addTownStop('D')
                         .addTownStop('C')
@@ -86,7 +90,7 @@ public class RouteDistanceQueryTest {
     public void testDistanceQuery_4() throws Exception {
         // 4. The distance of the route A-E-B-C-D.
         final Optional<Integer> res =
-                new RouteDistanceQuery<Character>(map)
+                new RouteDistanceQuery<Character>(map, algorithm)
                         .addTownStop('A')
                         .addTownStop('E')
                         .addTownStop('B')
@@ -102,7 +106,7 @@ public class RouteDistanceQueryTest {
     public void testDistanceQuery_5() throws Exception {
         // The distance of the route A-E-D.
         final Optional<Integer> res =
-                new RouteDistanceQuery<Character>(map)
+                new RouteDistanceQuery<Character>(map, algorithm)
                         .addTownStop('A')
                         .addTownStop('E')
                         .addTownStop('D')

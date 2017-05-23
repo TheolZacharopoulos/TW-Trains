@@ -1,4 +1,4 @@
-package graph.algorithms;
+package graph.algorithms.count_paths;
 
 import graph.Graph;
 import graph.GraphPath;
@@ -9,9 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class CountPathsAlgorithm {
+public class DFSCountPathsAlgorithm implements CountPathsAlgorithm {
+    public static final String ALGORITHM_NAME = "DFS_COUNT_PATHS";
 
-    public static <T> List<GraphPath<T>> getNumberOfPaths(
+    @Override
+    public String getAlgorithmName() {
+        return ALGORITHM_NAME;
+    }
+
+    public <T> List<GraphPath<T>> getNumberOfPaths(
             Graph<T> graph,
             Vertex<T> source,
             Predicate<GraphPath<T>> endPredicate,

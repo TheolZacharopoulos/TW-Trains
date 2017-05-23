@@ -1,4 +1,4 @@
-package graph.algorithms;
+package graph.algorithms.shortest_path;
 
 import graph.Edge;
 import graph.Graph;
@@ -9,7 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class DijkstraShortestPathAlgorithm implements IShortestPathAlgorithm {
+public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
+    public static final String ALGORITHM_NAME = "DIJKSTRA_SHORTEST_PATH";
+
+    @Override
+    public String getAlgorithmName() {
+        return ALGORITHM_NAME;
+    }
 
     private class VertexInfo {
         int distance;

@@ -2,6 +2,9 @@ package queries;
 
 import graph.adjacency_map.AdjacencyMapDirectedGraph;
 import graph.Graph;
+import graph.algorithms.*;
+import graph.algorithms.shortest_path.DijkstraShortestPathAlgorithm;
+import graph.algorithms.shortest_path.ShortestPathAlgorithm;
 import graph.parser.CharGraphParser;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +18,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ShortestRouteQueryTest {
-
     private RailwayMap<Character> map;
+    private ShortestPathAlgorithm algorithm;
 
     @Before
     public void setup() throws Exception {
@@ -25,18 +28,21 @@ public class ShortestRouteQueryTest {
 
         graphParser.parse("AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7");
         map = new RailwayMap<Character>("Kiwiland", graph);
+
+        GraphAlgorithmProvider algorithmProvider = new GraphAlgorithmProvider();
+        algorithm = algorithmProvider.getShortestPathAlgorithm(DijkstraShortestPathAlgorithm.ALGORITHM_NAME);
     }
     
     @Test(expected = MissingQueryParametersException.class)
     public void testMissingFrom() throws Exception {
-        new ShortestRouteQuery<Character>(map)
+        new ShortestRouteQuery<Character>(map, algorithm)
                 .to('C')
             .execute();
     }
 
     @Test(expected = MissingQueryParametersException.class)
     public void testMissingTo() throws Exception {
-        new ShortestRouteQuery<Character>(map)
+        new ShortestRouteQuery<Character>(map, algorithm)
                 .from('A')
             .execute();
     }
@@ -45,7 +51,7 @@ public class ShortestRouteQueryTest {
     public void testShortestRouteQuery_1() throws Exception {
         // The length of the shortest route (in terms of distance to travel) from A to C.
         final Optional<Integer> res =
-                new ShortestRouteQuery<Character>(map)
+                new ShortestRouteQuery<Character>(map, algorithm)
                         .from('A')
                         .to('C')
                     .execute();
@@ -58,7 +64,7 @@ public class ShortestRouteQueryTest {
     public void testShortestRouteQuery_2() throws Exception {
         // The length of the shortest route (in terms of distance to travel) from B to B.
         final Optional<Integer> res =
-                new ShortestRouteQuery<Character>(map)
+                new ShortestRouteQuery<Character>(map, algorithm)
                         .from('B')
                         .to('B')
                     .execute();
