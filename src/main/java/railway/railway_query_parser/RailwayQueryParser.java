@@ -3,7 +3,7 @@ package railway.railway_query_parser;
 import graph.algorithms.*;
 import graph.algorithms.count_paths.CountPathsAlgorithm;
 import graph.algorithms.count_paths.DFSCountPathsAlgorithm;
-import graph.algorithms.route_distance.BFSRouteDistanceAlgorithm;
+import graph.algorithms.route_distance.GreedyRouteDistanceAlgorithm;
 import graph.algorithms.route_distance.RouteDistanceAlgorithm;
 import graph.algorithms.shortest_path.DijkstraShortestPathAlgorithm;
 import graph.algorithms.shortest_path.ShortestPathAlgorithm;
@@ -27,7 +27,7 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
             ALGORITHM_PROVIDER.getCountPathsAlgorithm(DFSCountPathsAlgorithm.ALGORITHM_NAME);
 
     private static final RouteDistanceAlgorithm ROUTE_DISTANCE_ALGORITHM =
-            ALGORITHM_PROVIDER.getRouteDistanceAlgorithm(BFSRouteDistanceAlgorithm.ALGORITHM_NAME);
+            ALGORITHM_PROVIDER.getRouteDistanceAlgorithm(GreedyRouteDistanceAlgorithm.ALGORITHM_NAME);
 
     // Route Distance
     private static final String ROUTE_DISTANCE_STARTS_WITH = "The distance of";

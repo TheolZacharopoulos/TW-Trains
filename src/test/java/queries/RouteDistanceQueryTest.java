@@ -2,7 +2,7 @@ package queries;
 
 import graph.Graph;
 import graph.adjacency_map.AdjacencyMapDirectedGraph;
-import graph.algorithms.route_distance.BFSRouteDistanceAlgorithm;
+import graph.algorithms.route_distance.GreedyRouteDistanceAlgorithm;
 import graph.algorithms.GraphAlgorithmProvider;
 import graph.algorithms.route_distance.RouteDistanceAlgorithm;
 import graph.parser.CharGraphParser;
@@ -29,7 +29,7 @@ public class RouteDistanceQueryTest {
         map = new RailwayMap<Character>("Kiwiland", graph);
 
         GraphAlgorithmProvider algorithmProvider = new GraphAlgorithmProvider();
-        algorithm = algorithmProvider.getRouteDistanceAlgorithm(BFSRouteDistanceAlgorithm.ALGORITHM_NAME);
+        algorithm = algorithmProvider.getRouteDistanceAlgorithm(GreedyRouteDistanceAlgorithm.ALGORITHM_NAME);
     }
 
     @Test(expected = MissingQueryParametersException.class)

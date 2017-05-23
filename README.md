@@ -89,7 +89,53 @@ Output #10: 7
 The project has been implemented in **Java 8** and it is being used a completely Test Driven Development approach.
 Both code and design are a result of TDD while the testing framework have been used is **JUnit 4**.
 
-### Further Improvements
+### Parsing
+First, the program parses both the map definition and the queries as given above.
+A common `Parser` interface is used for parsing both. 
+
+More specifically, an abstract `GraphParser` defines the correct types for paring a graph, 
+while a `CharGraphParser` implements the logic of building a graph as the ones given in the example (with *Character*s as vertices).
+
+Furthermore, an abstract `QueriesParser` defines the correct types for parsing a query, 
+while the abstract `RailwayQueryParser` implements the logic of building a set of queries such as the ones in the example.
+Additionally, the concrete `CharRailwayQueryParser` implementation if defined for Character based graphs.
+
+### Graph
+The basic functionalities of a graph are described by the `Graph` interface. 
+The generic type on its definition declares the type of the vertices that are included on the Graph, e.g. on our case is *Character*.
+
+The `AdjacencyMapGraph` provides an implementation of the `Graph` interface using an **adjacency map** data structure.
+However, this implementation is a *undirected* graph implementation and we need for this problem a *directed* graph.
+The definition of a directed graph is given in `AdjacencyMapDirectedGraph` which is just an extension of the previous.
+
+### Graph Algorithms
+There are 3 different algorithms that are needed to answers the questions, one to count paths,
+one to count the distance of a route and one to find the shortest distance between two vertices.
+
+The algorithms are plug-able in the code. First, there is a very abstract interface `GraphAlgorithm`, 
+which is more as a *marking* interface. 
+Then, there are 3 different interfaces for each algorithmic problem that is needed: 
+`CountPathsAlgorithm`, `RouteDistanceAlgorithm` and `ShortestPathAlgorithm` respectively.
+
+By using the `GraphAlgorithmProvider` class a client can request an algorithm for each problem by asking with its name.
+There is one algorithm implementation for each interface above: 
+`DFSCountPathsAlgorithm`, `GreedyRouteDistanceAlgorithm` and `DijkstraShortestPathAlgorithm`.
+
+### Queries
+The queries are constructed as a simple **command** pattern.
+The `Query` interface defines an executable query, then there is a query for each question that can be asked:
+`NumOfRoutesQuery`, `RouteDistanceQuery` and `ShortestRouteQuery`.
+
+Each one of these queries accepts an algorithm implementation on their creation, this way the client 
+can choose which algorithm each query can use like a **strategy**. 
+The `QueryParser` os responsible of creating each of these queries depending on the instructions given like a **factory**.
+
+Moreover, the `QueryExecutor` interface defines a mechanism to execute queries.
+On this problem, `RailwayQueryExecutor` has been used in order to load the queries instructions, 
+then use the `RailwayQueryParser` to create the queries and then executing then one by one and provide the 
+result to a *Consumer* on the client.
+
+## Further Improvements
 Some improvement can be:
 
   - Get error messages from files, in order to have different languages.

@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 /**
  * A Breadth First Search implementation
  */
-public class BFSRouteDistanceAlgorithm implements RouteDistanceAlgorithm {
-    public static final String ALGORITHM_NAME = "BFS_ROUTE_DISTANCE";
+public class GreedyRouteDistanceAlgorithm implements RouteDistanceAlgorithm {
+    public static final String ALGORITHM_NAME = "GREEDY_ROUTE_DISTANCE";
 
     @Override
     public String getAlgorithmName() {
