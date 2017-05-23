@@ -198,13 +198,11 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
             fromToSettings.toIndex = input.indexOf(NUMBER_OF_ROUTES_TO, fromToSettings.fromIndex);
             fromToSettings.fromKeyWord = NUMBER_OF_ROUTES_FROM;
             fromToSettings.toKeyWord = NUMBER_OF_ROUTES_TO;
-
         } else if (input.contains(NUMBER_OF_ROUTES_STARTING) && input.contains(NUMBER_OF_ROUTES_ENDING)) {
             fromToSettings.fromIndex = input.indexOf(NUMBER_OF_ROUTES_STARTING);
             fromToSettings.toIndex = input.indexOf(NUMBER_OF_ROUTES_ENDING, fromToSettings.fromIndex);
             fromToSettings.fromKeyWord = NUMBER_OF_ROUTES_STARTING;
             fromToSettings.toKeyWord = NUMBER_OF_ROUTES_ENDING;
-
         } else {
             throw new QueryParseException("Not correct input for query.");
         }

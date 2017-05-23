@@ -24,11 +24,27 @@ public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
      * Helper class used for saving temporary data while traversing
      */
     private class VertexInfo {
-        int distance;
-        boolean visited;
+        private int distance;
+        private boolean visited;
 
         VertexInfo(int dist, boolean visited) {
             this.distance = dist;
+            this.visited = visited;
+        }
+
+        public int getDistance() {
+            return distance;
+        }
+
+        public void setDistance(int distance) {
+            this.distance = distance;
+        }
+
+        public boolean isVisited() {
+            return visited;
+        }
+
+        public void setVisited(boolean visited) {
             this.visited = visited;
         }
     }
@@ -38,10 +54,10 @@ public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
         int minDistance = 0;
 
         for (Vertex<T> vertex : info.keySet()) {
-            if (!info.get(vertex).visited) {
-                if (closest == null || info.get(vertex).distance < minDistance) {
+            if (!info.get(vertex).isVisited()) {
+                if (closest == null || info.get(vertex).getDistance() < minDistance) {
                     closest = vertex;
-                    minDistance = info.get(vertex).distance;
+                    minDistance = info.get(vertex).getDistance();
                 }
             }
         }
@@ -58,18 +74,18 @@ public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
             do {
                 for (Edge<T> edge : graph.getEdges(cur)) {
                     final Vertex<T> neighbor = edge.getTo();
-                    final int distance = info.get(cur).distance + edge.getWeight();
+                    final int distance = info.get(cur).getDistance() + edge.getWeight();
 
                     if (info.get(neighbor) == null) {
                         info.put(neighbor, new VertexInfo(distance, false));
 
                         // shorter path is found
-                    } else if (info.get(neighbor).distance > distance) {
-                        info.get(neighbor).distance = distance;
+                    } else if (info.get(neighbor).getDistance() > distance) {
+                        info.get(neighbor).setDistance(distance);
                     }
                 }
 
-                info.get(cur).visited = true;
+                info.get(cur).setVisited(true);
 
                 // this is in case start == end,
                 // where we do not want to get 0 but a new path starting from the next one.
@@ -90,6 +106,6 @@ public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
         if (info.get(end) == null) {
             return Optional.empty();
         }
-        return Optional.of(info.get(end).distance);
+        return Optional.of(info.get(end).getDistance());
     }
 }
