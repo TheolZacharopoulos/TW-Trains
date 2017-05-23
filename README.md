@@ -93,7 +93,7 @@ Both code and design are a result of TDD while the testing framework have been u
 Some improvement can be:
 
   - Get error messages from files, in order to have different languages.
-  - Better query (language using something like antlr).
+  - Better query parser (language using something like antlr).
   - More algorithms in order to show the power of changing between implementations.
   - Full Doxygen documentation.
 
