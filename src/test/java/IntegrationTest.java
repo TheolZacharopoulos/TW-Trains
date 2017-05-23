@@ -6,6 +6,7 @@ import org.junit.Test;
 import queries.QueryExecutor;
 import railway.RailwayMap;
 import railway.RailwayQueryExecutor;
+import railway.railway_query_parser.CharRailwayQueryParser;
 import railway.railway_query_parser.RailwayQueryParser;
 import utils.FileUtils;
 
@@ -13,9 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 
 public class IntegrationTest {
     private final String mapFilename = getClass().getClassLoader().getResource("map.txt").getPath();
@@ -28,8 +27,8 @@ public class IntegrationTest {
 
         final List<String> queryInstructions = FileUtils.readFileContentsLineByLine(queriesFilename);
 
-        RailwayQueryParser<Character> queryParser = new RailwayQueryParser<Character>(railwayMap);
-        QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor<Character>(queryParser);
+        final RailwayQueryParser<Character> queryParser = new CharRailwayQueryParser(railwayMap);
+        final QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor<Character>(queryParser);
 
         queryExecutor.loadQueries(queryInstructions);
 

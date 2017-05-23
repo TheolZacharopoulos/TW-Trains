@@ -8,6 +8,7 @@ import queries.errors.WrongQueryParameterValueException;
 import queries.query_parser.QueryParseException;
 import railway.RailwayMap;
 import railway.RailwayQueryExecutor;
+import railway.railway_query_parser.CharRailwayQueryParser;
 import railway.railway_query_parser.RailwayQueryParser;
 import utils.FileUtils;
 
@@ -34,7 +35,7 @@ public class Main {
 
             final List<String> queryInstructions = FileUtils.readFileContentsLineByLine(queriesFilename);
 
-            final RailwayQueryParser<Character> queryParser = new RailwayQueryParser<Character>(railwayMap);
+            final RailwayQueryParser<Character> queryParser = new CharRailwayQueryParser(railwayMap);
             final QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor<Character>(queryParser);
 
             queryExecutor.loadQueries(queryInstructions);

@@ -15,7 +15,7 @@ import railway.railway_query.NumOfRoutesQuery;
 import railway.railway_query.RouteDistanceQuery;
 import railway.railway_query.ShortestRouteQuery;
 
-public class RailwayQueryParser<T> extends QueriesParser<Integer> {
+public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
     private static final GraphAlgorithmProvider ALGORITHM_PROVIDER = new GraphAlgorithmProvider();
 
     private static final ShortestPathAlgorithm SHORTEST_PATH_ALGORITHM =
@@ -92,8 +92,9 @@ public class RailwayQueryParser<T> extends QueriesParser<Integer> {
             }
 
             final RouteDistanceQuery<T> query = new RouteDistanceQuery<T>(map, ROUTE_DISTANCE_ALGORITHM);
-            for (String town : routeVertices) {
-                query.addTownStop((T) new Character(town.charAt(0)));
+            for (String routeVertexData : routeVertices) {
+                T element = getVertexElementFromRouteVertexData(routeVertexData);
+                query.addTownStop(element);
             }
 
             return query;
@@ -187,8 +188,8 @@ public class RailwayQueryParser<T> extends QueriesParser<Integer> {
         final T from;
         final T to;
         try {
-            from = getVertex(input, fromToSettings.fromIndex, fromToSettings.fromKeyWord);
-            to = getVertex(input, fromToSettings.toIndex, fromToSettings.toKeyWord);
+            from = getVertexFromStringAfterIndexAndKeyword(input, fromToSettings.fromIndex, fromToSettings.fromKeyWord);
+            to = getVertexFromStringAfterIndexAndKeyword(input, fromToSettings.toIndex, fromToSettings.toKeyWord);
 
             fromToSettings.from = from;
             fromToSettings.to = to;
@@ -198,11 +199,7 @@ public class RailwayQueryParser<T> extends QueriesParser<Integer> {
 
         return fromToSettings;
     }
-
-    private T getVertex(String input, int index, String keyword) {
-        return (T) new Character(input.substring(index + keyword.length() + 1, index + keyword.length() + 2).charAt(0));
-    }
-
+    
     private Query<Integer> parseShortestRouteQuery(String input) throws QueryParseException {
             final int fromIndex = input.indexOf(SHORTEST_ROUTE_FROM);
             final int toIndex = input.indexOf(SHORTEST_ROUTE_TO, fromIndex);
@@ -211,8 +208,8 @@ public class RailwayQueryParser<T> extends QueriesParser<Integer> {
                 final T from;
                 final T to;
                 try {
-                    from = getVertex(input, fromIndex, SHORTEST_ROUTE_FROM);
-                    to = getVertex(input, toIndex, SHORTEST_ROUTE_TO);
+                    from = getVertexFromStringAfterIndexAndKeyword(input, fromIndex, SHORTEST_ROUTE_FROM);
+                    to = getVertexFromStringAfterIndexAndKeyword(input, toIndex, SHORTEST_ROUTE_TO);
                 } catch (IndexOutOfBoundsException e) {
                     throw new QueryParseException("Not correct input for query.");
                 }
@@ -220,4 +217,7 @@ public class RailwayQueryParser<T> extends QueriesParser<Integer> {
             }
         throw new QueryParseException("Not correct input for query.");
     }
+
+    protected abstract T getVertexFromStringAfterIndexAndKeyword(String input, int index, String keyword);
+    protected abstract T getVertexElementFromRouteVertexData(String routeVertexData);
 }

@@ -10,13 +10,12 @@ import railway.RailwayMap;
 import railway.railway_query.NumOfRoutesQuery;
 import railway.railway_query.RouteDistanceQuery;
 import railway.railway_query.ShortestRouteQuery;
+import railway.railway_query_parser.CharRailwayQueryParser;
 import railway.railway_query_parser.RailwayQueryParser;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RailwayQueryParserTest {
 
@@ -30,7 +29,7 @@ public class RailwayQueryParserTest {
         graphParser.parse("AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7");
         RailwayMap<Character> map = new RailwayMap<Character>("Kiwiland", graph);
 
-        queryParser = new RailwayQueryParser<Character>(map);
+        queryParser = new CharRailwayQueryParser(map);
     }
 
     // =========================
