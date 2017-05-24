@@ -18,6 +18,6 @@ public class ShortestRouteQuery<T> extends FromToRailwayQuery<T, Integer> {
     @Override
     public Optional<Integer> execute() throws MissingQueryParametersException, WrongQueryParameterValueException {
         super.execute();
-        return this.algorithm.findShortestPath(map.getGraph(), from, to);
+        return algorithm.findShortestPath(map.getGraph(), from, to);
     }
 }

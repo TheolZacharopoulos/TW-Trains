@@ -27,19 +27,23 @@ public class Main {
         final String queriesFilename = args[2];
 
         try {
+            // Read the input from files, map and queries
             final String mapDescription = FileUtils.readFileContents(mapFilename);
+            final List<String> queryInstructions = FileUtils.readFileContentsLineByLine(queriesFilename);
+
+            // Create and parse the graph
             final Graph<Character> graph = new AdjacencyMapDirectedGraph<>();
             (new CharGraphParser(graph)).parse(mapDescription);
 
+            // Create a map with Character type for the vertices
             final RailwayMap<Character> railwayMap = new RailwayMap<>(landName, graph);
 
-            final List<String> queryInstructions = FileUtils.readFileContentsLineByLine(queriesFilename);
-
+            // Parse the queries
             final RailwayQueryParser<Character> queryParser = new CharRailwayQueryParser(railwayMap);
-            final QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor<Character>(queryParser);
-
+            final QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor<>(queryParser);
             queryExecutor.loadQueries(queryInstructions);
 
+            // Execute the queries
             queryExecutor.executeAll(result -> {
                 if (result.isPresent()) {
                     System.out.println("Output: " + result.get());

@@ -21,6 +21,6 @@ public class RailwayMap<T> {
 
     @Override
     public String toString() {
-        return this.land;
+        return land;
     }
 }

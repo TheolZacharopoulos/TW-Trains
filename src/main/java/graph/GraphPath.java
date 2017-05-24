@@ -29,9 +29,9 @@ public class GraphPath<T> {
     }
 
     public void removeLast(int weight) {
-        if (!this.vertices.isEmpty()) {
+        if (!vertices.isEmpty()) {
             totalDistance -= weight;
-            this.vertices.remove(this.vertices.size() - 1);
+            vertices.remove(vertices.size() - 1);
         }
     }
 

@@ -12,7 +12,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class NumOfRoutesQuery<T> extends FromToRailwayQuery<T, Integer> {
-    private StopsDistanceSettings settings = new StopsDistanceSettings();
+
+    private Integer maxStops = null;
+    private Integer exactStops = null;
+    private Integer maxDistance = null;
 
     // Set them to true since they are composed (predicate.and(...))
     private Predicate<GraphPath<T>> endPredicate = path -> true;
@@ -26,23 +29,23 @@ public class NumOfRoutesQuery<T> extends FromToRailwayQuery<T, Integer> {
     }
 
     public NumOfRoutesQuery<T> maxStops(int stops) {
-        this.settings.setMaxStops(stops);
-        this.endPredicate = this.endPredicate.and(path -> path.getNumberOfStops() > stops);
-        this.checkPathPredicate = this.checkPathPredicate.and(path -> to.equals(path.getLastVertex()));
+        maxStops = stops;
+        endPredicate = endPredicate.and(path -> path.getNumberOfStops() > stops);
+        checkPathPredicate = checkPathPredicate.and(path -> to.equals(path.getLastVertex()));
         return this;
     }
 
     public NumOfRoutesQuery<T> exactStops(int stops) {
-        this.settings.setExactStops(stops);
-        this.endPredicate = this.endPredicate.and(path -> path.getNumberOfStops() > stops);
-        this.checkPathPredicate = this.checkPathPredicate.and(path -> to.equals(path.getLastVertex()) && path.getNumberOfStops() == stops);
+        exactStops = stops;
+        endPredicate = endPredicate.and(path -> path.getNumberOfStops() > stops);
+        checkPathPredicate = checkPathPredicate.and(path -> to.equals(path.getLastVertex()) && path.getNumberOfStops() == stops);
         return this;
     }
 
     public NumOfRoutesQuery<T> maxDistance(int distance) {
-        this.settings.setMaxDistance(distance);
-        this.endPredicate = this.endPredicate.and(path -> path.getTotalDistance() > distance);
-        this.checkPathPredicate = this.checkPathPredicate.and(path -> to.equals(path.getLastVertex()) && path.getTotalDistance() < distance);
+        maxDistance = distance;
+        endPredicate = endPredicate.and(path -> path.getTotalDistance() > distance);
+        checkPathPredicate = checkPathPredicate.and(path -> to.equals(path.getLastVertex()) && path.getTotalDistance() < distance);
         return this;
     }
 
@@ -53,11 +56,8 @@ public class NumOfRoutesQuery<T> extends FromToRailwayQuery<T, Integer> {
         checkStops();
 
         try {
-            final List<GraphPath<T>> paths = this.algorithm.getNumberOfPaths(
-                    map.getGraph(),
-                    from,
-                    this.endPredicate,
-                    this.checkPathPredicate);
+            final List<GraphPath<T>> paths = algorithm.getNumberOfPaths(
+                    map.getGraph(), from, endPredicate, checkPathPredicate);
 
             return Optional.of(paths.size());
         } catch (GraphException gE) {
@@ -66,15 +66,13 @@ public class NumOfRoutesQuery<T> extends FromToRailwayQuery<T, Integer> {
     }
 
     private void checkDistance() throws WrongQueryParameterValueException {
-        if (settings.getMaxDistance() != null && settings.getMaxDistance() < 0) {
+        if (maxDistance != null && maxDistance < 0) {
             throw new WrongQueryParameterValueException("Distance should be larger than 0");
         }
     }
 
     private void checkStops() throws WrongQueryParameterValueException {
-        if ((settings.getExactStops() != null && settings.getExactStops() < 0) ||
-            (settings.getMaxStops() != null && settings.getMaxStops() < 0))
-        {
+        if ((exactStops != null && exactStops < 0) || (maxStops != null && maxStops < 0)) {
             throw new WrongQueryParameterValueException("Stops should be larger than 0");
         }
     }

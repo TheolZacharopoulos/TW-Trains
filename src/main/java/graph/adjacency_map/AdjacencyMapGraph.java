@@ -22,8 +22,8 @@ public class AdjacencyMapGraph<T> implements Graph<T> {
     @Override
     public int numberOfEdges() {
         int sum = 0;
-        for (Vertex vertex : this.outgoing.keySet()) {
-            sum += this.outgoing.get(vertex).size();
+        for (Vertex vertex : outgoing.keySet()) {
+            sum += outgoing.get(vertex).size();
         }
         return sum;
     }
@@ -31,23 +31,15 @@ public class AdjacencyMapGraph<T> implements Graph<T> {
     @Override
     public Vertex<T> insertVertex(T v) {
         final Vertex<T> vertex = new Vertex<T>(v);
-        this.outgoing.putIfAbsent(vertex, new HashMap<>());
+        outgoing.putIfAbsent(vertex, new HashMap<>());
         return vertex;
     }
 
     @Override
     public Edge<T> insertEdge(T from, T to, int weight) throws GraphException {
-        final Vertex<T> vFrom = insertVertex(from);
-        final Vertex<T> vTo = insertVertex(to);
-
-        if (this.getEdge(vFrom, vTo).isPresent()) {
-            throw new GraphException("Edge already exists.");
-        }
-
-        final Edge<T> edge = new Edge<>(vFrom, vTo, weight);
-
-        this.outgoing.get(vFrom).putIfAbsent(vTo, edge);
-        this.outgoing.get(vTo).putIfAbsent(vFrom, edge);
+        final Edge<T> edge = createEdge(from, to, weight);
+        outgoing.get(edge.getFrom()).putIfAbsent(edge.getTo(), edge);
+        outgoing.get(edge.getTo()).putIfAbsent(edge.getFrom(), edge);
 
         return edge;
     }
@@ -56,18 +48,18 @@ public class AdjacencyMapGraph<T> implements Graph<T> {
     public Set<Edge<T>> getEdges(Vertex<T> vertex) throws GraphException {
         checkVertex(vertex);
 
-        final Map<Vertex<T>, Edge<T>> adjacencyMap = this.outgoing.get(vertex);
+        final Map<Vertex<T>, Edge<T>> adjacencyMap = outgoing.get(vertex);
         return new HashSet<>(adjacencyMap.values());
     }
 
     @Override
     public Set<Vertex<T>> getVertices() {
-        return this.outgoing.keySet();
+        return outgoing.keySet();
     }
 
     @Override
     public Set<Edge<T>> getEdges() {
-        return this.outgoing.values().stream()
+        return outgoing.values().stream()
             .map(Map::values)
             .flatMap(Collection::stream)
             .collect(Collectors.toSet());
@@ -81,14 +73,25 @@ public class AdjacencyMapGraph<T> implements Graph<T> {
     }
 
     public void checkVertex(Vertex<T> vertex) throws GraphException {
-        if (!this.outgoing.containsKey(vertex)) {
+        if (!outgoing.containsKey(vertex)) {
             throw new GraphException("Vertex does not exist");
         }
+    }
+
+    protected Edge<T> createEdge(T from, T to, int weight) throws GraphException {
+        final Vertex<T> vFrom = insertVertex(from);
+        final Vertex<T> vTo = insertVertex(to);
+
+        if (getEdge(vFrom, vTo).isPresent()) {
+            throw new GraphException("Edge already exists.");
+        }
+
+        return new Edge<>(vFrom, vTo, weight);
     }
 
     protected Optional<Edge> getEdge(Vertex<T> from, Vertex<T> to) throws GraphException {
         checkVertex(from);
         checkVertex(to);
-        return Optional.ofNullable(this.outgoing.get(from).get(to));
+        return Optional.ofNullable(outgoing.get(from).get(to));
     }
 }

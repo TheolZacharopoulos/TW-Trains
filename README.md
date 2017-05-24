@@ -139,12 +139,43 @@ On this problem, `RailwayQueryExecutor` has been used in order to load the queri
 then use the `RailwayQueryParser` to create the queries and then executing then one by one and provide the 
 result to a *Consumer* on the client.
 
+### Overall
+The `RailwayMap` object contains a name of the map (e.g. Kiwiland) and a graph that represents the map structure,
+where vertices are towns and edges are routes from town to town with their weight representing the distance.
+
+A simple usage of the above can be seen bellow:
+```java
+// Read the input from files, map and queries
+final String mapDescription = FileUtils.readFileContents(mapFilename);
+final List<String> queryInstructions = FileUtils.readFileContentsLineByLine(queriesFilename);
+
+// Create and parse the graph
+final Graph<Character> graph = new AdjacencyMapDirectedGraph<>();
+(new CharGraphParser(graph)).parse(mapDescription);
+
+// Create a map with Character type for the vertices
+final RailwayMap<Character> railwayMap = new RailwayMap<>(landName, graph);
+
+// Parse the queries
+final RailwayQueryParser<Character> queryParser = new CharRailwayQueryParser(railwayMap);
+final QueryExecutor<Integer> queryExecutor = new RailwayQueryExecutor<>(queryParser);
+queryExecutor.loadQueries(queryInstructions);
+
+// Execute the queries
+queryExecutor.executeAll(result -> {
+    if (result.isPresent()) {
+        System.out.println("Output: " + result.get());
+    } else {
+        System.out.println("NO SUCH ROUTE.");
+    }
+});
+```
+
 ## Further Improvements
 Some improvement can be:
 
   - Get error messages from files, in order to have different languages.
-  - Better query parser (language using something like antlr).
-  - More algorithms in order to show the power of changing between implementations.
+  - More advanced query parser (use an existing parser solution).
   - Full Doxygen documentation.
 
 ## About

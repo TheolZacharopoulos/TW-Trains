@@ -34,7 +34,7 @@ public class RouteDistanceQuery<T> extends RailwayQuery<T, Integer> {
         final GraphPath<T> path = new GraphPath<T>(route, 0);
 
         try {
-            this.algorithm.findRouteDistance(this.map.getGraph(), path);
+            algorithm.findRouteDistance(map.getGraph(), path);
         } catch (GraphException e) {
             return Optional.empty();
         }

@@ -4,7 +4,7 @@ import graph.Graph;
 import parser.Parser;
 
 /**
- * An abstract Graph parsers
+ * An abstract Graph parser
  * @param <I> the input type
  * @param <R> the Graph's elements type
  */

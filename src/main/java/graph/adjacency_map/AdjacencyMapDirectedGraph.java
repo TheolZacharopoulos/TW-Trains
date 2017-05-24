@@ -14,25 +14,18 @@ public class AdjacencyMapDirectedGraph<T> extends AdjacencyMapGraph<T> {
 
     public Vertex<T> insertVertex(T v) {
         final Vertex<T> vertex = super.insertVertex(v);
-        this.incoming.put(vertex, new HashMap<>());
+        incoming.put(vertex, new HashMap<>());
         return vertex;
     }
 
     @Override
     public Edge<T> insertEdge(T from, T to, int weight) throws GraphException {
-        final Vertex<T> vFrom = insertVertex(from);
-        final Vertex<T> vTo = insertVertex(to);
+        final Edge<T> edge = createEdge(from, to, weight);
 
-        if (this.getEdge(vFrom, vTo).isPresent()) {
-            throw new GraphException("Edge already exists.");
-        }
+        outgoing.get(edge.getFrom()).putIfAbsent(edge.getTo(), edge);
 
-        final Edge<T> edge = new Edge<>(vFrom, vTo, weight);
-
-        this.outgoing.get(vFrom).putIfAbsent(vTo, edge);
-
-        this.incoming.putIfAbsent(vTo, new HashMap<>());
-        this.incoming.get(vTo).putIfAbsent(vFrom, edge);
+        incoming.putIfAbsent(edge.getTo(), new HashMap<>());
+        incoming.get(edge.getTo()).putIfAbsent(edge.getFrom(), edge);
 
         return edge;
     }

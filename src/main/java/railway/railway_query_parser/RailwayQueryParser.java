@@ -92,7 +92,7 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
 
             final RouteDistanceQuery<T> query = new RouteDistanceQuery<>(map, ROUTE_DISTANCE_ALGORITHM);
             for (String routeVertexData : routeVertices) {
-                T element = getVertexElementFromRouteVertexData(routeVertexData);
+                T element = getVertexFromRouteVertex(routeVertexData);
                 query.addTownStop(element);
             }
             return query;
@@ -106,9 +106,11 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
         final int toIndex = input.indexOf(SHORTEST_ROUTE_TO, fromIndex);
 
         if (fromIndex != -1 && toIndex != -1) {
-            final T from = getVertexFromStringAfterIndexAndKeyword(input, fromIndex, SHORTEST_ROUTE_FROM);
-            final T to = getVertexFromStringAfterIndexAndKeyword(input, toIndex, SHORTEST_ROUTE_TO);
-            return new ShortestRouteQuery<>(map, from, to, SHORTEST_PATH_ALGORITHM);
+            return new ShortestRouteQuery<>(
+                    map,
+                    getVertexFromStringAfter(input, fromIndex, SHORTEST_ROUTE_FROM),
+                    getVertexFromStringAfter(input, toIndex, SHORTEST_ROUTE_TO),
+                    SHORTEST_PATH_ALGORITHM);
         }
         throw new QueryParseException("Not correct input for query.");
     }
@@ -148,11 +150,9 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
         private T to;
     }
 
-    private String parseArgument(
-            String input,
-            FromToSettings fromToSettings,
-            String fromKeyword,
-            String endingString) throws QueryParseException {
+    private String parseArgument(String input, FromToSettings fromToSettings, String fromKeyword, String endingString)
+            throws QueryParseException
+    {
         final int maxIndex = input.indexOf(fromKeyword, fromToSettings.toIndex);
         try {
             return input.substring(
@@ -193,6 +193,14 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
     private FromToSettings parseFromToForNumberOfRoutesQuery(String input) throws QueryParseException {
         final FromToSettings fromToSettings = new FromToSettings();
 
+        fillFromToIndexKeyword(input, fromToSettings);
+        fromToSettings.from = getVertexFromStringAfter(input, fromToSettings.fromIndex, fromToSettings.fromKeyWord);
+        fromToSettings.to = getVertexFromStringAfter(input, fromToSettings.toIndex, fromToSettings.toKeyWord);
+
+        return fromToSettings;
+    }
+
+    private void fillFromToIndexKeyword(String input, FromToSettings fromToSettings) throws QueryParseException {
         if (input.contains(NUMBER_OF_ROUTES_FROM) && input.contains(NUMBER_OF_ROUTES_TO)) {
             fromToSettings.fromIndex = input.indexOf(NUMBER_OF_ROUTES_FROM);
             fromToSettings.toIndex = input.indexOf(NUMBER_OF_ROUTES_TO, fromToSettings.fromIndex);
@@ -206,14 +214,9 @@ public abstract class RailwayQueryParser<T> extends QueriesParser<Integer> {
         } else {
             throw new QueryParseException("Not correct input for query.");
         }
-
-        fromToSettings.from = getVertexFromStringAfterIndexAndKeyword(input, fromToSettings.fromIndex, fromToSettings.fromKeyWord);
-        fromToSettings.to = getVertexFromStringAfterIndexAndKeyword(input, fromToSettings.toIndex, fromToSettings.toKeyWord);
-
-        return fromToSettings;
     }
 
     // Return the correct type of Vertex
-    protected abstract T getVertexFromStringAfterIndexAndKeyword(String input, int index, String keyword) throws QueryParseException;
-    protected abstract T getVertexElementFromRouteVertexData(String routeVertexData)throws QueryParseException;
+    protected abstract T getVertexFromStringAfter(String input, int index, String keyword) throws QueryParseException;
+    protected abstract T getVertexFromRouteVertex(String routeVertex)throws QueryParseException;
 }

@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+/**
+ * Is responsible for executing a set of railway queries.
+ */
 public class RailwayQueryExecutor<T> implements QueryExecutor<Integer> {
     private final List<Query<Integer>> queries;
     private final RailwayQueryParser<T> queryParser;
@@ -31,6 +34,7 @@ public class RailwayQueryExecutor<T> implements QueryExecutor<Integer> {
     public void executeAll(Consumer<Optional<Integer>> queryResultConsumer)
             throws MissingQueryParametersException, WrongQueryParameterValueException
     {
+        // execute each query and provide its result to the consumer
         queries.stream()
             .map(this::safeQueryExecution)
             .forEach(queryResultConsumer);

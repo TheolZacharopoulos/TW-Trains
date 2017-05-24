@@ -45,7 +45,7 @@ public class CharGraphParser extends GraphParser<String, Character> {
             }
         }
 
-        return this.graph;
+        return graph;
     }
 
     /**
