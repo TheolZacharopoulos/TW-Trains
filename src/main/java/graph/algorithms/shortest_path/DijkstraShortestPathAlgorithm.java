@@ -94,25 +94,25 @@ public class DijkstraShortestPathAlgorithm implements ShortestPathAlgorithm {
         int minDistance = 0;
 
         for (Vertex<T> vertex : info.keySet()) {
-            if (!info.get(vertex).isVisited()) {
-                if (closest == null || info.get(vertex).getDistance() < minDistance) {
-                    closest = vertex;
-                    minDistance = info.get(vertex).getDistance();
-                }
+            if (!info.get(vertex).isVisited() &&
+                (closest == null || info.get(vertex).getDistance() < minDistance))
+            {
+                closest = vertex;
+                minDistance = info.get(vertex).getDistance();
             }
         }
         return closest;
     }
 
-    private <T> void visitEdges(Set<Edge<T>> edges, Vertex<T> verte, Map<Vertex<T>, VertexInfo> info) {
+    private <T> void visitEdges(Set<Edge<T>> edges, Vertex<T> vertex, Map<Vertex<T>, VertexInfo> info) {
         for (Edge<T> edge : edges) {
             final Vertex<T> neighbor = edge.getTo();
-            final int distance = info.get(verte).getDistance() + edge.getWeight();
+            final int distance = info.get(vertex).getDistance() + edge.getWeight();
 
             if (info.get(neighbor) == null) {
                 info.put(neighbor, new VertexInfo(distance, false));
 
-                // shorter path is found
+            // shorter path is found
             } else if (info.get(neighbor).getDistance() > distance) {
                 info.get(neighbor).setDistance(distance);
             }
